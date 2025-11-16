@@ -145,6 +145,234 @@ body {
     animation: gradientShift 20s ease infinite;
     z-index: -2;
     opacity: 0.95;
+    overflow: hidden;
+}
+
+/* Telecom Background Elements */
+.telecom-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+/* Network Nodes */
+.network-node {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.4);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.node-1 { top: 15%; left: 20%; animation-delay: 0s; }
+.node-2 { top: 35%; left: 60%; animation-delay: 0.3s; }
+.node-3 { top: 55%; left: 15%; animation-delay: 0.6s; }
+.node-4 { top: 25%; right: 25%; animation-delay: 0.9s; }
+.node-5 { bottom: 30%; left: 45%; animation-delay: 1.2s; }
+.node-6 { bottom: 20%; right: 15%; animation-delay: 1.5s; }
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 1;
+    }
+}
+
+/* Connection Lines */
+.network-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+}
+
+.connection-line {
+    stroke: rgba(255, 255, 255, 0.6);
+    stroke-width: 2;
+    stroke-dasharray: 5, 5;
+    animation: dashMove 3s linear infinite;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
+}
+
+.line-1 { animation-delay: 0s; }
+.line-2 { animation-delay: 0.5s; }
+.line-3 { animation-delay: 1s; }
+.line-4 { animation-delay: 1.5s; }
+.line-5 { animation-delay: 2s; }
+
+@keyframes dashMove {
+    0% {
+        stroke-dashoffset: 0;
+        opacity: 0.4;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        stroke-dashoffset: 20;
+        opacity: 0.4;
+    }
+}
+
+/* Signal Waves */
+.signal-wave {
+    position: absolute;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    animation: waveExpand 3s ease-out infinite;
+}
+
+.wave-1 {
+    width: 100px;
+    height: 100px;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.wave-2 {
+    width: 150px;
+    height: 150px;
+    top: 60%;
+    right: 20%;
+    animation-delay: 1s;
+}
+
+.wave-3 {
+    width: 120px;
+    height: 120px;
+    bottom: 25%;
+    left: 30%;
+    animation-delay: 2s;
+}
+
+@keyframes waveExpand {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Data Packets */
+.data-packet {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    animation: packetMove 4s linear infinite;
+}
+
+.packet-1 {
+    top: 30%;
+    left: 0;
+    animation-delay: 0s;
+}
+
+.packet-2 {
+    top: 50%;
+    left: 0;
+    animation-delay: 1.5s;
+}
+
+.packet-3 {
+    top: 70%;
+    left: 0;
+    animation-delay: 3s;
+}
+
+@keyframes packetMove {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(calc(100vw - 20px)) translateY(-50px);
+        opacity: 0;
+    }
+}
+
+/* Cell Towers */
+.cell-tower {
+    position: absolute;
+    bottom: 0;
+    width: 4px;
+    height: 150px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.3));
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.cell-tower::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -6px;
+    width: 16px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+}
+
+.cell-tower::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: -4px;
+    width: 12px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.tower-1 {
+    left: 15%;
+    animation: towerPulse 2s ease-in-out infinite;
+    animation-delay: 0s;
+}
+
+.tower-2 {
+    right: 20%;
+    animation: towerPulse 2s ease-in-out infinite;
+    animation-delay: 1s;
+}
+
+@keyframes towerPulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scaleY(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scaleY(1.05);
+    }
 }
 
 @keyframes gradientShift {
@@ -1353,6 +1581,35 @@ section {
 
 .form-group textarea {
     resize: vertical;
+}
+
+.form-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: none;
+}
+
+.form-message.success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #34d399;
+    display: block;
+}
+
+.form-message.error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #f87171;
+    display: block;
+}
+
+#submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 /* Footer */
