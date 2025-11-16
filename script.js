@@ -115,28 +115,129 @@ document.querySelectorAll('.skill-card, .project-card, .stat-item, .expertise-ca
     animateOnScroll.observe(card);
 });
 
-// Form submission
-const contactForm = document.querySelector('.contact-form');
+// Form submission with EmailJS (with fallback to mailto)
+const contactForm = document.getElementById('contact-form');
+const submitBtn = document.getElementById('submit-btn');
+const formMessage = document.getElementById('form-message');
+
+// EmailJS configuration check (will use mailto fallback if not configured)
+
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
         // Get form data
-        const formData = new FormData(contactForm);
-        const name = contactForm.querySelector('input[type="text"]').value;
-        const email = contactForm.querySelector('input[type="email"]').value;
-        const subject = contactForm.querySelectorAll('input[type="text"]')[1].value;
-        const message = contactForm.querySelector('textarea').value;
+        const userName = contactForm.querySelector('[name="user_name"]').value.trim();
+        const userEmail = contactForm.querySelector('[name="user_email"]').value.trim();
+        const subject = contactForm.querySelector('[name="subject"]').value.trim();
+        const message = contactForm.querySelector('[name="message"]').value.trim();
         
-        // Simple validation
-        if (name && email && subject && message) {
-            // Here you would normally send the data to a server
-            alert('Thank you for your message! I will get back to you soon.');
-            contactForm.reset();
+        // Validation
+        if (!userName || !userEmail || !subject || !message) {
+            formMessage.textContent = 'Please fill in all fields.';
+            formMessage.className = 'form-message error';
+            setTimeout(() => {
+                formMessage.textContent = '';
+                formMessage.className = 'form-message';
+            }, 3000);
+            return;
+        }
+        
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(userEmail)) {
+            formMessage.textContent = 'Please enter a valid email address.';
+            formMessage.className = 'form-message error';
+            setTimeout(() => {
+                formMessage.textContent = '';
+                formMessage.className = 'form-message';
+            }, 3000);
+            return;
+        }
+        
+        // Disable submit button during submission
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+        formMessage.textContent = '';
+        formMessage.className = 'form-message';
+        
+        // Check if EmailJS is properly configured
+        const serviceId = 'YOUR_SERVICE_ID';
+        const templateId = 'YOUR_TEMPLATE_ID';
+        const publicKey = 'YOUR_PUBLIC_KEY';
+        
+        if (typeof emailjs !== 'undefined' && 
+            serviceId !== 'YOUR_SERVICE_ID' && 
+            templateId !== 'YOUR_TEMPLATE_ID' && 
+            publicKey !== 'YOUR_PUBLIC_KEY') {
+            
+            // Initialize EmailJS if not already initialized
+            try {
+                emailjs.init(publicKey);
+            } catch (e) {
+                console.log('EmailJS init error:', e);
+            }
+            
+            // Get form data for EmailJS
+            const templateParams = {
+                user_name: userName,
+                user_email: userEmail,
+                subject: subject,
+                message: message,
+                to_email: 'ybalaramireddy@gmail.com'
+            };
+            
+            // Send email using EmailJS
+            emailjs.send(serviceId, templateId, templateParams)
+                .then((response) => {
+                    console.log('SUCCESS!', response.status, response.text);
+                    formMessage.textContent = 'Thank you for your message! I will get back to you soon.';
+                    formMessage.className = 'form-message success';
+                    contactForm.reset();
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Message';
+                    
+                    // Hide message after 5 seconds
+                    setTimeout(() => {
+                        formMessage.textContent = '';
+                        formMessage.className = 'form-message';
+                    }, 5000);
+                }, (error) => {
+                    console.log('EmailJS FAILED, using mailto fallback...', error);
+                    // Fallback to mailto
+                    sendViaMailto(userName, userEmail, subject, message);
+                });
         } else {
-            alert('Please fill in all fields.');
+            // Use mailto as fallback
+            sendViaMailto(userName, userEmail, subject, message);
         }
     });
+}
+
+// Fallback function to send via mailto link
+function sendViaMailto(userName, userEmail, subject, message) {
+    const emailBody = `Name: ${userName}%0D%0AEmail: ${userEmail}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
+    const mailtoLink = `mailto:ybalaramireddy@gmail.com?subject=${encodeURIComponent(subject)}&body=${emailBody}`;
+    
+    // Open mailto link
+    window.location.href = mailtoLink;
+    
+    // Show success message
+    formMessage.textContent = 'Opening your email client... If it doesn\'t open, please send an email to ybalaramireddy@gmail.com';
+    formMessage.className = 'form-message success';
+    
+    // Reset form
+    setTimeout(() => {
+        document.getElementById('contact-form').reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+    }, 1000);
+    
+    // Hide message after 8 seconds
+    setTimeout(() => {
+        formMessage.textContent = '';
+        formMessage.className = 'form-message';
+    }, 8000);
 }
 
 // Parallax effect for hero section
